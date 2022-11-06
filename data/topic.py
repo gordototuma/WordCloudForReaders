@@ -10,12 +10,13 @@ class Topic():
         self._topic = self._topics()
         self._topic_in_dic(self._topic)
         self._translate_topics()
+        
 
 
     @property
     def getTopics(self):
         return self._topics_from_txt
-
+    
     
     def _topics(self):
         textrazor.api_key = credentials.api_key
@@ -28,7 +29,7 @@ class Topic():
 
         for entity in response_topics.topics():    
             if(0.5<=entity.score <=1):                
-                self._topics_from_txt.add(entity.label)                
+                self._topics_from_txt.add((entity.label.lower(), entity.score))                 
             else: break        
     
 
@@ -39,7 +40,7 @@ class Topic():
         translator = Translator()
 
         for x in topics:            
-            translation = translator.translate(x, dest='es')
-            self._topics_from_txt.add(translation.text)
+            translation = translator.translate(x[0], dest='es')
+            self._topics_from_txt.add((translation.text.lower(), x[1]))
 
                 

@@ -26,4 +26,4 @@ class wordProcessor():
     def _calculate_statistics_words(self):
 
         for x in self._words:
-            self._add_Word_and_frequency(x,self._calculate_frequency(x))
+            self._add_Word_and_frequency(x.lower(),self._calculate_frequency(x))
