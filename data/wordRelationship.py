@@ -25,9 +25,9 @@ class wordRelationship():
     def _save_relationship(self):
 
         for x in self._topics:
-            for y in self._words.keys():                
-                if self._relationship_words(y,x[0]) >= 0.5 and x[1] == 1:
-                    print(x[0],y)
+            if x[1] != 1: continue
+            for y in self._words.keys():                                
+                if self._relationship_words(y,x[0]) >= 0.5:                    
                     self._relationship_word_topic.append((x[0],y))
                 
 

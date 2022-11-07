@@ -11,8 +11,6 @@ class Topic():
         self._topic_in_dic(self._topic)
         self._translate_topics()
         
-
-
     @property
     def getTopics(self):
         return self._topics_from_txt
