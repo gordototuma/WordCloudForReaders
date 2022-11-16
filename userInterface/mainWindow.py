@@ -2,9 +2,10 @@ import tkinter as tk
 
 class MainWindow(tk.Tk):
     
-    def __init__(self):
+    def __init__(self, controller):
 
         super().__init__()
+        self._controller = controller
         self.title('Word Cloud For Readers')
         self._display_frame = None
         self._txt1 = None
@@ -60,4 +61,7 @@ class MainWindow(tk.Tk):
             )
         
         self._btn1.pack()
+    
+    def _analisis(self):
+        pass
         
