@@ -8,6 +8,6 @@ class wordCloud():
     
     def generate_wordcloud_image(self):
         wc = WordCloud()
-        wc.generate_from_frequencies(self._word_frequency)
-        img = wc.to_image()
-        img.show()
+        wc.generate_from_frequencies(self._word_frequency)        
+        wc.to_file("./wc.png")
+        
