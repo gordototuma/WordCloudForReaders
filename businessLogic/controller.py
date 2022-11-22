@@ -16,6 +16,7 @@ class Controller():
         self._topics = None
         self._relation = None
         self._topics_iter = None
+        self._words_iter = None
 
             
     @property
@@ -31,27 +32,24 @@ class Controller():
         self._data_txt = wordProcessor(self._my_txt.list_words)
         self._topics = Topic(self.txt)
         self._topics_iter = iter(list(self.topic_from_txt()))
+        self._words_iter = iter(self._data_txt.words)
     
-    # print(my_txt.list_words)
-    # print(data_txt.dic_words_frequency)    
-    #genera nube de palabras
-
+    
     def word_cloud(self):
         self._obj_analysis()
         wordClouds = wordCloud(self._data_txt.dic_words_frequency)
         wordClouds.generate_wordcloud_image()
     
-    #Diagrama de baras - Torta
+    
     def diagram_pie(self):    
         diagram_pie = Diagrams(self._data_txt.dic_words_frequency,self._topics.getTopics)
         diagram_pie.graph_pie()
 
-    #Relacion entre tema y palabras de la nube
-    def _relation_topic_word(self):
-        #print(self._topics.getTopics)
+    
+    def _relation_topic_word(self):        
         self._relation = wordRelationship(self._data_txt.dic_words_frequency, self._topics.getTopics)
     
-    #Dibujar grafo
+    
     def graph(self):
         self._relation_topic_word()
         grapho = RelationshipGraph(self._relation.getRelation)
@@ -63,14 +61,17 @@ class Controller():
     def topic(self):
         try:            
             topic = next(self._topics_iter)
-            print(topic)
             return topic
         except:
             return 0
+    
+    def words(self):
+        try:
+            word = next(self._words_iter)            
+            return word
+        except:
+            return 0
 
-# definiciones de las palabras
-
-# for x in data_txt.dic_words_frequency.keys():
-#     glossary = Dictionary(x)
-#     print(x+':',glossary.definitions)
-#     print('\n')
+    def definition_word(self, word):
+        glossary = Dictionary(word)
+        return glossary.definitions

@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import *
-
+from tkinter import messagebox, ttk
 
 class MainWindow(tk.Tk):
     
@@ -17,19 +17,35 @@ class MainWindow(tk.Tk):
         self._labelwc = None
         self._create_main_frame()
         self._create_txt_input()
-        self._create_label_imagewc()
         self._scrollBar_txt()
-        self._create_btn()
-        self._btn_diagram_pie()    
-        self._btn_graph()        
+        self._create_btn()        
         self.mainloop()
         
 
     
     def _create_main_frame(self):
 
-        self._display_frame = tk.Frame(master=self)
+        self._display_frame = tk.Frame(master=self, bg='red')
         self._display_frame.pack(fill=tk.X)
+        
+        # canvas = tk.Canvas(self._display_frame)
+        # scrollbar = ttk.Scrollbar(self._display_frame, orient="vertical", command=canvas.yview)
+        # scrollable_frame = ttk.Frame(canvas)
+
+        # scrollable_frame.bind(
+        #     "<Configure>",
+        #     lambda e: canvas.configure(
+        #         scrollregion=canvas.bbox("all")
+        #     )
+        # )
+
+        # canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+        # canvas.configure(yscrollcommand=scrollbar.set)
+
+        
+        # canvas.pack(side="left", fill="both", expand=True)
+        # scrollbar.pack(side="right", fill="y")
 
         
 
@@ -99,8 +115,12 @@ class MainWindow(tk.Tk):
         txt = self._txt1.get(1.0, tk.END+"-1c")
         self._controller.txt = txt        
         self._controller.word_cloud()
+        self._create_label_imagewc()
         self._load_image()
         self._topics()
+        self._words()
+        self._btn_diagram_pie()    
+        self._btn_graph()
 
     
     def _load_image(self):        
@@ -116,7 +136,7 @@ class MainWindow(tk.Tk):
             text='Digrama de Torta',
             command= self._click_btn_diagram_pie
             )
-        self._btn2.grid(row=4,column=0)   
+        self._btn2.grid(row=5,column=0)   
     
     def _click_btn_diagram_pie(self):
         self._controller.diagram_pie()
@@ -128,7 +148,7 @@ class MainWindow(tk.Tk):
             text='Relación Tema - palabras',
             command= self._click_btn_graph
             )
-        self._btn3.grid(row=5,column=0)
+        self._btn3.grid(row=6,column=0)
            
     
     def _click_btn_graph(self):
@@ -139,7 +159,7 @@ class MainWindow(tk.Tk):
         thereis_topic = True
         self._gridFrame = tk.Frame(master=self._display_frame)
         for x in range(100):
-            for y in range(8):
+            for y in range(5):
                 topic = self._controller.topic()
                 if topic!=0:
                     label = tk.Label(
@@ -158,9 +178,47 @@ class MainWindow(tk.Tk):
                     if topic[1] == 1:
                         label.config(bg='light salmon')                        
                         
-                    self._gridFrame.grid(row=3 ,column=0)
                 else:
                     thereis_topic = False 
                     break
             if not thereis_topic:
                 break
+        self._gridFrame.grid(row=3 ,column=0)
+    
+    def _words(self):
+        self._gridFramebtn = tk.Frame(master=self._display_frame)
+        for row in range(100):            
+            for col in range(8):                
+                word = self._controller.words()
+                if word != 0:
+                    self._button = tk.Button(
+                        master=self._gridFramebtn,
+                        text=word,                    
+                        fg="black",
+                        width=10,
+                        height=2,
+                        highlightbackground="lightblue",
+                        bg="purple2",                    
+                    )                
+                    self._button.bind("<ButtonPress-1>", self._cellClicked)
+                    self._button.grid(
+                        row=row,
+                        column=col,
+                        padx=5,
+                        pady=5,
+                        sticky="nsew"
+                    )                
+                
+        self._gridFramebtn.grid(row=4 ,column=0)
+                
+    
+    def _cellClicked(self,event):
+        clickedBtn = event.widget 
+        self._definition_word(clickedBtn['text'],self._controller.definition_word(clickedBtn['text']))
+    
+    def _definition_word(self, word, definition):
+        defi = ""
+        for x in definition:
+            defi = defi + ("- "+x+"\n\n")
+        messagebox.showinfo(message=defi, title="Definicion de "+word)
+        

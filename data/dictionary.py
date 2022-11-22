@@ -19,6 +19,9 @@ class Dictionary():
 
     
     def _definition(self):
-        article = self._consult()['articles'][0]
-        for x in range(len(article['definitions'])):
-            self._definitions.append(article['definitions'][x]['sentence']['text'])
+        try:
+            article = self._consult()['articles'][0]
+            for x in range(len(article['definitions'])):
+                self._definitions.append(article['definitions'][x]['sentence']['text'])
+        except:
+            self._definitions.append("Error al buscar la palabra")
