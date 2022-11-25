@@ -15,6 +15,7 @@ class MainWindow(tk.Tk):
         self._btn2 = None
         self._text = tk.StringVar()
         self._labelwc = None
+        self._second_frame = None
         self._create_main_frame()
         self._create_txt_input()
         self._scrollBar_txt()
@@ -24,28 +25,31 @@ class MainWindow(tk.Tk):
 
     
     def _create_main_frame(self):
+        self.geometry("800x500")
+        self.resizable(1,1)
+        self._display_frame = tk.Frame(master=self)
+        self._display_frame.pack(fill=BOTH,expand=1)       
 
-        self._display_frame = tk.Frame(master=self, bg='red')
-        self._display_frame.pack(fill=tk.X)
+        sec = Frame(self._display_frame)
+
+        sec.pack(fill=X,side=BOTTOM)
+
+        my_canvas = Canvas(self._display_frame, bg='red')
+
+        my_canvas.pack(side=LEFT,fill=BOTH,expand=1)
+
+        y_scrollbar = ttk.Scrollbar(self._display_frame,orient=VERTICAL,command=my_canvas.yview)
+
+        y_scrollbar.pack(side=RIGHT,fill=Y)        
+
+        my_canvas.configure(yscrollcommand=y_scrollbar.set)
+
+        my_canvas.bind("<Configure>",lambda e: my_canvas.config(scrollregion= my_canvas.bbox(ALL))) 
+
+        self._second_frame = Frame(my_canvas, bg='red')
         
-        # canvas = tk.Canvas(self._display_frame)
-        # scrollbar = ttk.Scrollbar(self._display_frame, orient="vertical", command=canvas.yview)
-        # scrollable_frame = ttk.Frame(canvas)
 
-        # scrollable_frame.bind(
-        #     "<Configure>",
-        #     lambda e: canvas.configure(
-        #         scrollregion=canvas.bbox("all")
-        #     )
-        # )
-
-        # canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-
-        # canvas.configure(yscrollcommand=scrollbar.set)
-
-        
-        # canvas.pack(side="left", fill="both", expand=True)
-        # scrollbar.pack(side="right", fill="y")
+        my_canvas.create_window((0,0),window= self._second_frame, anchor="nw")
 
         
 
@@ -53,8 +57,8 @@ class MainWindow(tk.Tk):
     def _create_txt_input(self):           
 
         self._txt1 = tk.Text(
-            master=self._display_frame,
-            height=5
+            master=self._second_frame,
+            
             )
         
         self._txt1.grid(
@@ -63,10 +67,13 @@ class MainWindow(tk.Tk):
             padx=10,
             pady=10
         )
+
+        
+        
     
     def _create_label_imagewc(self):        
         self._labelwc = tk.Label(
-            master=self._display_frame,              
+            master=self._second_frame,              
             borderwidth=2, 
             relief="groove",                        
             width=80, 
@@ -78,15 +85,13 @@ class MainWindow(tk.Tk):
             column=0,
             padx=10,
             pady=10,            
-        )      
-
-        
+        )        
 
     
     def _scrollBar_txt(self):
-        
+                
         scroll_vert = tk.Scrollbar(
-            master=self._display_frame,
+            master=self._second_frame,
             command=self._txt1.yview
             )
 
@@ -103,10 +108,11 @@ class MainWindow(tk.Tk):
     def _create_btn(self):
 
         self._btn1 = tk.Button(
-            master=self._display_frame,
+            master=self._second_frame,
             text='Analizar Texto',
             command= self._click_btn_analisis_word_cloud
             )
+        
         self._btn1.grid(row=1,column=0)   
         
     
@@ -132,7 +138,7 @@ class MainWindow(tk.Tk):
     
     def _btn_diagram_pie(self):
         self._btn2 = tk.Button(
-            master=self._display_frame,
+            master=self._second_frame,
             text='Digrama de Torta',
             command= self._click_btn_diagram_pie
             )
@@ -144,7 +150,7 @@ class MainWindow(tk.Tk):
     
     def _btn_graph(self):
         self._btn3 = tk.Button(
-            master=self._display_frame,
+            master=self._second_frame,
             text='Relación Tema - palabras',
             command= self._click_btn_graph
             )
@@ -157,7 +163,7 @@ class MainWindow(tk.Tk):
 
     def _topics(self):
         thereis_topic = True
-        self._gridFrame = tk.Frame(master=self._display_frame)
+        self._gridFrame = tk.Frame(master=self._second_frame)
         for x in range(100):
             for y in range(5):
                 topic = self._controller.topic()
@@ -186,7 +192,7 @@ class MainWindow(tk.Tk):
         self._gridFrame.grid(row=3 ,column=0)
     
     def _words(self):
-        self._gridFramebtn = tk.Frame(master=self._display_frame)
+        self._gridFramebtn = tk.Frame(master=self._second_frame)
         for row in range(100):            
             for col in range(8):                
                 word = self._controller.words()
