@@ -23,12 +23,18 @@ class wordRelationship():
     
 
     def _save_relationship(self):
-
+        counter = 0
         for x in self._topics:
             if x[1] != 1: continue
+            counter_two = 0
             for y in self._words.keys():                                
                 if self._relationship_words(y,x[0]) >= 0.5:                    
+                    #print(x[0],y)
                     self._relationship_word_topic.append((x[0],y))
+                    counter_two = counter_two+1
+                    if counter_two==3: break
+            counter = counter+1
+            if counter==3: break
                 
 
 

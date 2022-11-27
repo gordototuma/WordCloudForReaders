@@ -46,8 +46,9 @@ class Controller():
         diagram_pie.graph_pie()
 
     
-    def _relation_topic_word(self):        
+    def _relation_topic_word(self):              
         self._relation = wordRelationship(self._data_txt.dic_words_frequency, self._topics.getTopics)
+        
     
     
     def graph(self):
@@ -75,3 +76,8 @@ class Controller():
     def definition_word(self, word):
         glossary = Dictionary(word)
         return glossary.definitions
+    
+    def validate_acount_words(self):
+        if len(self._txt.split(' '))>90:
+            return False
+        return True

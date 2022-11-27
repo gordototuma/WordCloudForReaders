@@ -9,6 +9,8 @@ class MainWindow(tk.Tk):
         super().__init__()
         self._controller = controller
         self.title('Word Cloud For Readers')
+        icono = tk.PhotoImage(file="./resources/icon-16.png")
+        self.iconphoto(True, icono)
         self._display_frame = None
         self._txt1 = None
         self._btn1 = None
@@ -61,7 +63,7 @@ class MainWindow(tk.Tk):
 
         label1 = tk.Label(
             master=self._second_frame,
-            text="Ingrese el texto",
+            text="Ingrese el texto (menor o igual a 90 palabras)",
             bg="steelblue4",
             fg="turquoise1",
             font=("Helvetica", 13, "bold")
@@ -155,21 +157,26 @@ class MainWindow(tk.Tk):
         
     
     def _click_btn_analisis_word_cloud(self):
-        #self.progress_bar()
         txt = self._txt1.get(1.0, tk.END+"-1c")
         self._controller.txt = txt        
-        self._controller.word_cloud()
-        self._create_label_imagewc()
-        self._load_image()
-        self._topics()
-        self._words()
-        self._btn_diagram_pie()    
-        self._btn_graph()
-        self._new_analysis()
-
+        
+        if self._controller.validate_acount_words():
+            #self.progress_bar()
+            self._btn1.config(state=DISABLED)            
+            self._controller.word_cloud()
+            self._create_label_imagewc()
+            self._load_image()
+            self._topics()
+            self._words()
+            self._btn_diagram_pie()    
+            self._btn_graph()
+            self._new_analysis()
+        else:
+            messagebox.showerror(message="El número de palabras del texto es mayor a 90.", title="Más de 90 palabras.")
     
+        
     def _load_image(self):        
-        imagewc = tk.PhotoImage(file='./wc.png')        
+        imagewc = tk.PhotoImage(file='./resources/wc.png')        
         self._labelwc['image'] = imagewc
         self._labelwc.image = imagewc         
         self._labelwc.config(width=800,height=250)
@@ -178,7 +185,7 @@ class MainWindow(tk.Tk):
     def _btn_diagram_pie(self):
         self._btn2 = tk.Button(
             master=self._second_frame,
-            text='Digrama de Torta',
+            text='Digrama de Torta - Palabras más mencionadas',
             command= self._click_btn_diagram_pie,
             bg="turquoise1",                    
             font=("arial",10,"bold"),
@@ -194,7 +201,7 @@ class MainWindow(tk.Tk):
     def _btn_graph(self):
         self._btn3 = tk.Button(
             master=self._second_frame,
-            text='Relación Tema - palabras',
+            text='Relación Tema - palabras (Puede tardar entre 5 a 10 min.)',
             command= self._click_btn_graph,
             bg="turquoise1",                    
             font=("arial",10,"bold"),
@@ -217,12 +224,16 @@ class MainWindow(tk.Tk):
         self._btn4.grid(row=11,column=0,padx=10, pady=10)
     
     def _new_analysis_operation(self):
+
         self._txt1.delete("1.0","end")
+        self.geometry("880x230")
         self._labelwc.grid_remove()
         self._btn2.grid_remove()
         self._btn3.grid_remove()
         self._gridFrame.grid_remove()
         self._gridFramebtn.grid_remove()
+        self._btn1.config(state=NORMAL)
+
 
     def _topics(self):
 
@@ -246,7 +257,7 @@ class MainWindow(tk.Tk):
         for x in range(100):
             for y in range(5):
                 topic = self._controller.topic()
-                if topic!=0:
+                if topic!=0 and topic[0] != "":
                     label = tk.Label(
                         master=self._gridFrame,              
                         borderwidth=0, 

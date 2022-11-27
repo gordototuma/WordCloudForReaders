@@ -9,5 +9,5 @@ class wordCloud():
     def generate_wordcloud_image(self):
         wc = WordCloud()
         wc.generate_from_frequencies(self._word_frequency)        
-        wc.to_file("./wc.png")
+        wc.to_file("./resources/wc.png")
         
